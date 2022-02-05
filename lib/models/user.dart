@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class User {
   final String email;
   final String uid;
@@ -8,7 +10,7 @@ class User {
   final String bio;
   final List followers;
   final List following;
-  
+
   User({
     required this.email,
     required this.uid,
@@ -19,18 +21,26 @@ class User {
     required this.following,
   });
 
+  Map<String, dynamic> toJson() => {
+        'email': email,
+        'uid': uid,
+        'photoUrl': photoUrl,
+        'username': username,
+        'bio': bio,
+        'followers': followers,
+        'following': following,
+      };
 
+  static User fromSnap(DocumentSnapshot snap) {
+    var snapshot = snap.data() as Map<String, dynamic>;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'email': email,
-      'uid': uid,
-      'photoUrl': photoUrl,
-      'username': username,
-      'bio': bio,
-      'followers': followers,
-      'following': following,
-    };
+    return User(
+        email: snapshot['email'],
+        uid: snapshot['uid'],
+        photoUrl: snapshot['photoUrl'],
+        username: snapshot['username'],
+        bio: snapshot['bio'],
+        followers: snapshot['followers'],
+        following: snapshot['following']);
   }
-
 }
